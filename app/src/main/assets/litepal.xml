@@ -3,7 +3,7 @@
     <version value="1" />
     <list>
         <mapping class="azhen.com.hotweather.db.City" />
-        <mapping class="azhen.com.hotweather.db.Country" />
+        <mapping class="azhen.com.hotweather.db.County" />
         <mapping class="azhen.com.hotweather.db.Province" />
     </list>
 </litepal>

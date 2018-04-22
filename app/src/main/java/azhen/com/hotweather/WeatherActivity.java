@@ -1,5 +1,6 @@
 package azhen.com.hotweather;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
@@ -27,6 +28,7 @@ import java.io.IOException;
 
 import azhen.com.hotweather.gson.Forecast;
 import azhen.com.hotweather.gson.Weather;
+import azhen.com.hotweather.service.AutoUpdateService;
 import azhen.com.hotweather.util.HttpUtil;
 import azhen.com.hotweather.util.Utility;
 import okhttp3.Call;
@@ -174,7 +176,21 @@ public class WeatherActivity extends AppCompatActivity {
         });
     }
 
-    public void showWeatherInfo(Weather weather) {
+    /**
+     * 处理并展示Weather实体中的数据
+     * @param weather
+     */
+    private void showWeatherInfo(Weather weather) {
+        if (weather != null && "ok".equals(weather.status)) {
+            displayWeatherInfo(weather);
+            activeAutoUpdatService();
+        } else {
+            Toast.makeText(WeatherActivity.this, "获取天气信息失败", Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    private void displayWeatherInfo(Weather weather) {
         String cityName = weather.basic.cityName;
         String updateTime = weather.basic.update.updateTime.split(" ")[1];
         String degree = weather.now.temperature + "C";
@@ -207,5 +223,10 @@ public class WeatherActivity extends AppCompatActivity {
         carWashText.setText(carWash);
         sportText.setText(sport);
         weatherLayout.setVisibility(View.VISIBLE);
+    }
+
+    private void activeAutoUpdatService() {
+        Intent intent = new Intent(this, AutoUpdateService.class);
+        startService(intent);
     }
 }

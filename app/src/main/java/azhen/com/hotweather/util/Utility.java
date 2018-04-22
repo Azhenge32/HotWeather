@@ -2,6 +2,8 @@ package azhen.com.hotweather.util;
 
 import android.text.TextUtils;
 
+import com.google.gson.Gson;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -9,8 +11,20 @@ import org.json.JSONObject;
 import azhen.com.hotweather.db.City;
 import azhen.com.hotweather.db.County;
 import azhen.com.hotweather.db.Province;
+import azhen.com.hotweather.gson.Weather;
 
 public class Utility {
+    public static Weather handleWeatherResponse(String response) {
+        try {
+            JSONObject jsonObject = new JSONObject(response);
+            JSONArray jsonArray = jsonObject.getJSONArray("HeWeather");
+            String weatherContent = jsonArray.getJSONObject(0).toString();
+            return new Gson().fromJson(weatherContent, Weather.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
     /**
      * 解析和处理省级数据
      * @param response
